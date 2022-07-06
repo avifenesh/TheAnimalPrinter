@@ -46,11 +46,13 @@ def find_table(soup):
     tables = soup.find_all("table", {"class": "wikitable sortable"})
     animal_table = None
     for table in tables:
-        if "Animal" in table.find('tbody').find("tr").find("th"):
+        headers = table.find('tbody').find("tr").find("th")
+        if "Animal" in headers and "Collateral adjective" in headers:
             animal_table = table
             break
     if animal_table is None:
-        raise Exception("The desired table doesnt exist in this page, please check you provide a valid page")
+        raise Exception("The desired table doesnt exist in this page, please "
+                        "check you provide a valid page")
     else:
         return animal_table
 
@@ -62,19 +64,25 @@ def output_animals_and_pic(table):
         try:
             items = row.find_all('td')
             img_url = items[0].find("a")["href"]
-            download_to = PATH_TO_IMG.replace('\\', '/') + img_url.split("/")[2] + ".png"
-            threads.append(Thread(target=download_pic, args=(img_url, download_to)))
+            download_to = PATH_TO_IMG.replace('\\', '/') + img_url.split("/")[
+                2] + ".png"
+            threads.append(
+                Thread(target=download_pic, args=(img_url, download_to)))
 
-            diff_of_the_same_adjective = items[5].get_text(separator=" ").strip().split(" ")
+            diff_of_the_same_adjective = items[5].get_text(
+                separator=" ").strip().split(" ")
 
             for collateral_adjective in diff_of_the_same_adjective:
 
                 if collateral_adjective in IGNORED_LIST:
                     continue
 
-                animal_name = items[0].text.strip().replace("(list)", "").replace("[c]", "").replace("[12]", "")
-                threads.append(Thread(target=output_into_html, args=(animal_name, collateral_adjective, download_to)))
-
+                animal_name = items[0].text.strip().replace("(list)",
+                                                            "").replace("[c]",
+                                                                        "").replace(
+                    "[12]", "")
+                threads.append(Thread(target=output_into_html, args=(
+                    animal_name, collateral_adjective, download_to)))
 
         except (IndexError, AttributeError, TypeError):
             continue
@@ -87,27 +95,30 @@ def output_animals_and_pic(table):
 
 def download_pic(img_url, download_to):
     try:
+        print(img_url, download_to)
         response = session.get(WIKI_PATH + img_url)
         soup = BeautifulSoup(response.text, 'html.parser')
-        img_src = soup.select("table.infobox a.image img[src]")[0]['src'].replace('\\', '/')
+        img_src = soup.select("table.infobox a.image img[src]")[0][
+            'src'].replace('\\', '/')
         urllib.request.urlretrieve("https:" + img_src, download_to)
-
         print("Downloading the img - %s" % img_src)
+        return True
     except IndexError:
-        return
+        return False
 
 
 def output_into_html(animal_name, collateral_adjective, local_path_to_img):
     with open(HTML_FILE, "a", encoding='utf-8') as file:
-        text = f"""<tr><td>{animal_name}</td><td>{collateral_adjective}</td><td>{local_path_to_img}</td></tr>\n"""
+        text = f"""<tr><td>{animal_name}</td><td>{collateral_adjective}</td
+        ><td>{local_path_to_img}</td></tr>\n """
         file.write(text)
 
 
 def create_basic_html_file():
     with open(HTML_FILE, "w", encoding='utf-8') as file:
-        text = """<html>
-        <head></head>
-        <body><table><tbody><tr><th>Animal</th><th>Collateral adjective</th><th>Local Path</th></tr>\n"""
+        text = """<html> <head></head> 
+        <body><table><tbody><tr><th>Animal</th><th>Collateral 
+        adjective</th><th>Local Path</th></tr>\n"""
         file.write(text)
 
 
