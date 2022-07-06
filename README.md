@@ -6,19 +6,19 @@ the program take url path as an argument, check for animal table there, for
 each animal download the relevant image into tmp folder, and output the
 name, the collateral adjective and the local path to the pic
 
-Im trying to avoid comment in my code and write self-explained code instead
-I've been trying to do that in this project also
+Im trying to avoid comment in my code and write self-explained code instead.
+I've been trying to do that in this project also.
 I'll explain the code here and the train of thought, in case that it doesnt
-clear in the code itself
+clear in the code itself.
 
 The main file take the arguments from the user, validate it and provide it to
  the printer function
 
 The printer function is the big-boss function, that call to the other
-function to d there job in their time
+function to do there job in their time
 
-first we create the file and directory we'll for later - the tmp directory
-and the html file with opening content
+first we create the file and directory we'll need for later - the tmp directory
+and the html file with some opening content
 
 Using requests and bs4 the program get the html from the page and process it
 
