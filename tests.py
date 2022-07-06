@@ -1,21 +1,21 @@
 import unittest
 import animal_printer
 from bs4 import BeautifulSoup
+from pathlib import Path
 
+LOCAL_PATH = str(Path().resolve()).replace('\\', '/')
 
 
 class TestStringMethods(unittest.TestCase):
 
     def test_download_pic(self):
         self.assertTrue(animal_printer.download_pic("/wiki/Camel",
-                                                    "C:/Users/Avi "
-                                                    "Fenesh/desktop/python"
-                                                    "/TheAnimalPrinter/tmp"
+
+                                                        LOCAL_PATH+"/tmp"
                                                     "/Camel.png"))
         self.assertFalse(animal_printer.download_pic("/wiki/Bird",
-                                                     "C:/Users/Avi "
-                                                     "Fenesh/desktop/python"
-                                                     "/TheAnimalPrinter/tmp"
+                                                     LOCAL_PATH +
+                                                     "/tmp"
                                                      "/Bird.png"))
 
     def test_find_table(self):
