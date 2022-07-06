@@ -1,6 +1,6 @@
-How to use:
+#   How to use:
 
-you can find the requirements for create the env file in the requirements.txt file
+## you can find the requirements for create the env file in the requirements.txt file
 
 the program take url path as an argument, check for animal table there, for
 each animal download the relevant image into tmp folder, and output the
