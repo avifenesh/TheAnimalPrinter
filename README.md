@@ -4,7 +4,7 @@
 
 the program take url path as an argument, check for animal table there, for
 each animal download the relevant image into tmp folder, and output the
-name, the collateral adjective and the local path to the pic
+name, the collateral adjective and the local path to the image.
 
 Im trying to avoid comment in my code and write self-explained code instead.
 I've been trying to do that in this project also.
