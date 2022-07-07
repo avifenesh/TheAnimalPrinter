@@ -6,7 +6,6 @@ from threading import Thread
 from pathlib import Path
 import urllib.request
 import os
-from socket import setdefaulttimeout
 
 session = requests.Session()
 retry = Retry(connect=3, backoff_factor=0.5)
