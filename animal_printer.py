@@ -96,17 +96,17 @@ def parse_row(row):
 
 
 def download_pic(img_url, download_to):
+    response = session.get(WIKI_PATH + img_url)
+    soup = BeautifulSoup(response.text, 'html.parser')
     try:
-        print(img_url, download_to)
-        response = session.get(WIKI_PATH + img_url)
-        soup = BeautifulSoup(response.text, 'html.parser')
         img_src = soup.select("table.infobox a.image img[src]")[0][
-            'src'].replace('\\', '/')
-        urllib.request.urlretrieve("https:" + img_src, download_to)
-        print("Downloading the img - %s" % img_src)
-        return True
+                'src'].replace('\\', '/')
     except IndexError:
         return False
+    urllib.request.urlretrieve("https:" + img_src, download_to)
+    print("Downloading the img - %s" % img_src)
+    return True
+
 
 
 def output_into_html(animal_name, collateral_adjective, local_path_to_img):
