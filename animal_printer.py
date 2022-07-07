@@ -37,7 +37,7 @@ def printer(url):
     if success:
         return "You can calm down, we got it!"
     else:
-        "Oh shit! something went wrong"
+        return "Oh shit! something went wrong"
 
 
 def find_table(soup):
