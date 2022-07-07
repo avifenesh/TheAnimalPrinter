@@ -14,8 +14,6 @@ adapter = HTTPAdapter(max_retries=retry)
 session.mount('http://', adapter)
 session.mount('https://', adapter)
 
-setdefaulttimeout(30)
-
 LOCAL_PATH = Path().resolve()
 PATH_TO_IMG = str(LOCAL_PATH) + "/tmp/"
 WIKI_PATH = "https://en.wikipedia.org/"
@@ -61,30 +59,14 @@ def output_animals_and_pic(table):
     rows = table.find_all("tr")
     threads = []
     for row in rows:
-        try:
-            data_values = row.find_all('td')
-            img_url = data_values[0].find("a")["href"]
-        except(TypeError, IndexError):
+        animal_name, img_url, download_to, diff_of_the_same_adjective = \
+            parse_row(row)
+        if animal_name is None:
             continue
-        download_to = PATH_TO_IMG.replace('\\', '/') + img_url.split("/")[
-            2] + ".png"
         threads.append(
             Thread(target=download_pic, args=(img_url, download_to)))
-
-        diff_of_the_same_adjective = data_values[5].get_text(
-            separator=" ").strip().split(" ")
-
         for collateral_adjective in diff_of_the_same_adjective:
-
             if collateral_adjective in IGNORED_LIST:
-                continue
-            try:
-                animal_name = data_values[0].text.strip().replace("(list)",
-                                                                  "").replace(
-                    "[c]",
-                    "").replace(
-                    "[12]", "")
-            except TypeError:
                 continue
             threads.append(Thread(target=output_into_html, args=(
                 animal_name, collateral_adjective, download_to)))
@@ -93,6 +75,24 @@ def output_animals_and_pic(table):
     for thread in threads:
         thread.join()
     return True
+
+
+def parse_row(row):
+    try:
+        data_values = row.find_all('td')
+        img_url = data_values[0].find("a")["href"]
+        animal_name = data_values[0].text.strip().replace("(list)",
+                                                          "").replace(
+            "[c]",
+            "").replace(
+            "[12]", "")
+    except(TypeError, IndexError):
+        return None, None, None, None
+    download_to = PATH_TO_IMG.replace('\\', '/') + img_url.split("/")[
+        2] + ".png"
+    diff_of_the_same_adjective = data_values[5].get_text(
+        separator=" ").strip().split(" ")
+    return animal_name, img_url, download_to, diff_of_the_same_adjective
 
 
 def download_pic(img_url, download_to):
