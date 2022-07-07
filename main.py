@@ -4,7 +4,8 @@ import argparse
 
 
 def main():
-    parser = argparse.ArgumentParser(description="url to wiki page with animal table")
+    parser = argparse.ArgumentParser(description="url to wiki page with "
+                                                 "animal table")
     parser.add_argument("url", type=str)
     args = parser.parse_args()
     if not url(args.url):
